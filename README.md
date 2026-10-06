@@ -6,6 +6,8 @@ A Claude Code plugin marketplace, `session-explorer`, with one mod so far: **pro
 
 `/prompt-history` opens a side pane listing every prompt you sent in the current session. For each one you can read the final reply and the tool calls it made, put the prompt back in the prompt box to edit and resend it, or rewind the conversation to it.
 
+![The prompt-history pane browsing the session that built it: moving through prompts, opening one to read its reply and tool calls, going back, and searching](assets/prompt-history.gif)
+
 - The list shows each prompt's first few lines, the start of the final reply, and how many tools it ran and files it edited.
 - Search filters by prompt text as you type.
 - Opening a prompt shows its full text, the whole reply rendered as Markdown, and a collapsible list of its tool calls.

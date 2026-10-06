@@ -1,5 +1,5 @@
 import { atom, read, update } from 'claude-code'
-import type { Register, SessionMessage, ToolUseSummary } from 'claude-code'
+import type { EngineInterface, Register, SessionMessage, ToolUseSummary } from 'claude-code'
 
 import type { Opened } from '../types'
 
@@ -94,6 +94,13 @@ export function preview(prompt: string, width: number): string[] {
   return kept.map((l, k) => `${k ? ' ' : '>'} ${l}`.padEnd(width + 2))
 }
 
+// Remember who holds the pane's ring (the list draws that entry lit) and show the whole
+// entry (item:i), not just its first line (row:i). The kit has no window.
+async function track($: EngineInterface, key: string) {
+  await update($, focusedKey, () => key)
+  if (key) void $.ui.scroll({ in: PANE, to: { key: key.replace(/^row:/, 'item:') } }).catch(() => undefined)
+}
+
 // The pane's focus ring is positional: it holds the Nth focusable, not a key. So the
 // search box is the first focusable (filtering rows below it never moves it), and
 // every view change puts the ring on a named element itself.
@@ -114,11 +121,10 @@ export const register: Register = on => {
   // The list's focusables in ring order as last drawn (empty while a prompt is open).
   let ring: string[] = []
 
-  // Remember who holds the ring (the list draws that entry lit) and keep it on screen.
+  // Remember who holds the ring (the list draws that entry lit), via track.
   on('ui.focus', { requestId: PANE }, async ($, e, next) => {
     const r = await next(e)
-    if (!r.deny) await update($, focusedKey, () => e.element ?? '')
-    if (e.element) void $.ui.scroll({ in: PANE, to: { key: e.element } }).catch(() => undefined) // kit: no window
+    if (!r.deny) await track($, e.element ?? '')
     return r
   })
 
@@ -143,8 +149,12 @@ export const register: Register = on => {
     const q = await read($, query)
     const width = Math.max(20, (e.props.bodyColumns ?? 60) - 4)
     // Puts the ring on one of this pane's elements. A session answers { deny } when it
-    // cannot; the test kit, which has no ring, rejects instead.
-    const focus = (key: string) => $.ui.focus({ requestId: PANE, key }).catch(() => undefined)
+    // cannot; the test kit, which has no ring, rejects instead. A move made from a press
+    // doesn't pass through the ui.focus hook, so it's tracked here.
+    const focus = async (key: string) => {
+      const r = await $.ui.focus({ requestId: PANE, key }).catch(() => undefined)
+      if (r && !r.deny) await track($, key)
+    }
 
     if (idx === null || !turns[idx]) {
       const shown = matches(turns, q)
