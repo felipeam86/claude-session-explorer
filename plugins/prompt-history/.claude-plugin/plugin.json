@@ -1,0 +1,19 @@
+{
+  "name": "prompt-history",
+  "version": "0.1.0",
+  "description": "Browse the prompts you sent this session in a side pane: search them, read each final reply and the tools it ran, edit a prompt again or rewind to it",
+  "author": {
+    "name": "Felipe Aguirre Martinez",
+    "email": "felipeam86@gmail.com"
+  },
+  "homepage": "https://github.com/felipeam86/claude-session-explorer",
+  "repository": "https://github.com/felipeam86/claude-session-explorer",
+  "keywords": [
+    "history",
+    "prompts",
+    "navigation",
+    "rewind",
+    "pane"
+  ],
+  "types": "./types/index.d.ts"
+}

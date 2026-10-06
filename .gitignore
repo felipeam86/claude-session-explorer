@@ -1,0 +1,2 @@
+# API type declarations Claude Code writes when it loads a plugin
+plugins/*/.claude-plugin/types/

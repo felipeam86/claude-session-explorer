@@ -1,0 +1,18 @@
+{
+  "name": "session-explorer",
+  "owner": {
+    "name": "Felipe Aguirre Martinez",
+    "email": "felipeam86@gmail.com"
+  },
+  "metadata": {
+    "description": "Claude Code mods for exploring what happened in a session"
+  },
+  "plugins": [
+    {
+      "name": "prompt-history",
+      "source": "./plugins/prompt-history",
+      "description": "Browse the prompts you sent this session in a side pane: search them, read each final reply and the tools it ran, edit a prompt again or rewind to it",
+      "version": "0.1.0"
+    }
+  ]
+}
